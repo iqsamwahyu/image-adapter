@@ -1,0 +1,121 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of the go coverage tool (if you use it)
+*.out
+
+# Logs
+*.log
+
+# Dependency directories (except vendor/)
+vendor/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE-specific files
+# JetBrains (IntelliJ IDEA, GoLand, etc.)
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# GoLand workspace
+*.go.work
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+.sess/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Other editors
+*.directory
+
+# Project files for other environments
+*.env
+
+# Testing caches
+*.test
+
+# Goland issues
+leaks.txt
+
+# Primary build output
+*.o
+*.a
+_tidang/*
+build/
+_output
+release/
+
+# Hidden secret keys.
+secrets/
+
+# docker
+.docker/
+
+# Kubernetes 
+.kubernetes/
+*.yml
+*.yaml
+
+# Terraform 
+.terraform/
+
+# Prevent vendoring directories when explicitly ignored, except vendor when project explicitly uses vendoring.
+**/vendor/
+
+# Avoid unwanted build remnants (generally)
+_build/
+build-artifacts/
+archive/
+pkg/
+
+# OS folder misc.
+*.save
+_save
+.go.doc.in
+.txt~
+.saved
+
+# Environment variable files (general conventions)
+*.env
+*.env.*
+
+# Ignore Go Mod vendor directory
+*/vendor/
+
+# Ignore node modules directory
+node_modules/
+
+# Temporary Files
+# Any other unnecessary files
+
+# Cached Go build results
+*.cache
+
+# Ignore Locks (unix) 
+*.lock
+.lock/
+
+# Ignore TAGS in case of boon/tag/
+tags
+
+# SSH storage
+.ssh/
