@@ -186,6 +186,16 @@ func TestUploadOnCloudinary(t *testing.T) {
 			expectedFileName: "test-file-5.png",
 			expectedError:    true,
 		},
+		{
+			name: "[7] upload pdf to cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "test-file-7.pdf",
+				url:        "https://www.electrolux.co.id/globalassets/5-support/manuals/id-id/ewf8005eqwa_user-manual-id-id.pdf",
+			},
+			expectedFileName: "test-file-7.pdf",
+			expectedError:    true,
+		},
 	}
 	i := New()
 	i.WithCloudinary("<put your cloudinary connection url here>")
