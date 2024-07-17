@@ -9,7 +9,7 @@ import (
 )
 
 type Provider interface {
-	Get(bucket, url string) string
+	Get(bucket, fileName string) (string, error)
 	Upload(bucket, fileName, url string) (string, error)
 }
 
@@ -93,6 +93,23 @@ func (i *ImageAdapter) Upload(bucketName, fileName, url string) (string, error) 
 	return i.cloudinary.Upload(bucketName, f, url)
 	// TODO: Upload to each provider asynchronously using go routine and return the main one
 
+}
+
+func (i *ImageAdapter) Get(bucketName, fileName string) (string, error) {
+	if bucketName == "" {
+		return "", errors.New("bucket name is empty")
+	}
+
+	if fileName == "" {
+		return "", errors.New("file name is empty")
+	}
+
+	switch i.main {
+	case "cloudinary":
+		return i.cloudinary.Get(bucketName, fileName)
+	default:
+		return "", errors.New("main adapter is not set")
+	}
 }
 
 // make standardized file name

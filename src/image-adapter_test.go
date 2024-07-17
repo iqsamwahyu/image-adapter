@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+var (
+	cloudinaryConnectionURL = "<put your cloudinary connection url here>"
+)
+
 func TestNew(t *testing.T) {
 	type args struct {
 		opt []Option
@@ -75,13 +79,13 @@ func TestInitWithCloudinary(t *testing.T) {
 			},
 			expected: false,
 		},
-		// {
-		// 	name: "valid connection url cloudinary",
-		// 	args: args{
-		// 		connectionURL: "<put your cloudinary connection url here>",
-		// 	},
-		// 	expected: true,
-		// },
+		{
+			name: "valid connection url cloudinary",
+			args: args{
+				connectionURL: cloudinaryConnectionURL,
+			},
+			expected: true,
+		},
 	}
 
 	for _, test := range tests {
@@ -198,12 +202,88 @@ func TestUploadOnCloudinary(t *testing.T) {
 		},
 	}
 	i := New()
-	i.WithCloudinary("<put your cloudinary connection url here>")
+	i.WithCloudinary(cloudinaryConnectionURL)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got, err := i.Upload(tt.args.bucketName, tt.args.fileName, tt.args.url); got != tt.expectedFileName || (err != nil && !tt.expectedError) {
 				t.Errorf("Upload() = %v, expected fileName %v, error: %v", got, tt.expectedFileName, err)
 			}
+		})
+	}
+}
+
+func TestGetOnCloudinary(t *testing.T) {
+	type args struct {
+		bucketName string
+		fileName   string
+	}
+
+	type testCase struct {
+		name          string
+		args          args
+		expectedError bool
+	}
+
+	tests := []testCase{
+		{
+			name: "[1] get jpg from cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "test-file-1.jpg",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[2] get jpg from cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "test-file-2.jpeg",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[3] get png from cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "test-file-3.png",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[4] get broken image from cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "test-file-4.png",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[5] get empty file name from cloudinary",
+			args: args{
+				bucketName: "test-bucket",
+				fileName:   "",
+			},
+			expectedError: true,
+		},
+		{
+			name: "[6] get empty bucket name from cloudinary",
+			args: args{
+				bucketName: "",
+				fileName:   "test-file-5.png",
+			},
+			expectedError: true,
+		},
+	}
+
+	i := New()
+	i.WithCloudinary(cloudinaryConnectionURL)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := i.Get(tt.args.bucketName, tt.args.fileName)
+			if err != nil && !tt.expectedError {
+				t.Errorf("Get() = %v, error: %v", got, err)
+			}
+			t.Logf("Get() = %v, error: %v", got, err)
 		})
 	}
 }

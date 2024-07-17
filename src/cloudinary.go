@@ -15,8 +15,23 @@ type CloudinaryProvider struct {
 }
 
 // Get implements Provider.
-func (c CloudinaryProvider) Get(bucket, url string) string {
-	return url
+func (c CloudinaryProvider) Get(bucket, fileName string) (string, error) {
+	f := bucket + "/" + fileName
+
+	image, err := c.cld.Image(f)
+	if err != nil {
+		return "", err
+	}
+	image.DeliveryType = "private"
+	image.Config.URL.SignURL = true
+	image.Config.URL.Analytics = false
+
+	imageStr, err := image.String()
+	if err != nil {
+		return "", err
+	}
+
+	return imageStr, nil
 }
 
 // Upload implements Provider.
