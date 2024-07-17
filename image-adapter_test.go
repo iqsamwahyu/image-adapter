@@ -16,7 +16,7 @@ func TestNew(t *testing.T) {
 	type testCase struct {
 		name     string
 		args     args
-		expected *ImageAdapter
+		expected *imageAdapter
 	}
 
 	tests := []testCase{
@@ -25,7 +25,7 @@ func TestNew(t *testing.T) {
 			args: args{
 				opt: []Option{},
 			},
-			expected: &ImageAdapter{
+			expected: &imageAdapter{
 				opt: optionsDefault,
 			},
 		},
@@ -38,7 +38,7 @@ func TestNew(t *testing.T) {
 					},
 				},
 			},
-			expected: &ImageAdapter{
+			expected: &imageAdapter{
 				opt: optionsDefault,
 			},
 		},

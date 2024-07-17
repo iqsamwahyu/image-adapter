@@ -9,13 +9,13 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )
 
-type CloudinaryProvider struct {
+type cloudinaryProvider struct {
 	cld            *cloudinary.Cloudinary
-	AllowedFormats []string
+	allowedFormats []string
 }
 
 // Get implements Provider.
-func (c CloudinaryProvider) Get(bucket, fileName, transformation string) (string, error) {
+func (c cloudinaryProvider) Get(bucket, fileName, transformation string) (string, error) {
 	f := bucket + "/" + fileName
 
 	image, err := c.cld.Image(f)
@@ -39,7 +39,7 @@ func (c CloudinaryProvider) Get(bucket, fileName, transformation string) (string
 }
 
 // Upload implements Provider.
-func (c CloudinaryProvider) Upload(bucket, fileName, url string) (string, error) {
+func (c cloudinaryProvider) Upload(bucket, fileName, url string) (string, error) {
 	var (
 		b bool = true
 	)
@@ -56,7 +56,7 @@ func (c CloudinaryProvider) Upload(bucket, fileName, url string) (string, error)
 		Folder:         bucket,
 		Type:           "private",
 		Invalidate:     &b,
-		AllowedFormats: c.AllowedFormats,
+		AllowedFormats: c.allowedFormats,
 	})
 
 	if err != nil || uploadResult.Error.Message != "" {

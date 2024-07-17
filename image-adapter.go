@@ -8,17 +8,17 @@ import (
 	"github.com/cloudinary/cloudinary-go/v2"
 )
 
-type Provider interface {
+type provider interface {
 	Get(bucket, fileName, transformation string) (string, error)
 	Upload(bucket, fileName, url string) (string, error)
 }
 
-type ImageAdapter struct {
+type imageAdapter struct {
 	opt        Option
 	main       string
-	cloudinary Provider
-	minio      Provider
-	// s3         Provider
+	cloudinary provider
+	minio      provider
+	// s3         provider
 }
 
 type Option struct {
@@ -26,19 +26,13 @@ type Option struct {
 	// IsPublic          bool
 }
 
-type UploadParam struct {
-	Bucket   string
-	Url      string
-	FileName string
-}
-
 var optionsDefault = Option{
 	AllowedExtensions: []string{"jpg", "png", "jpeg"},
 	// IsPublic:          false,
 }
 
-func New(opt ...Option) *ImageAdapter {
-	i := new(ImageAdapter)
+func New(opt ...Option) *imageAdapter {
+	i := new(imageAdapter)
 	i.opt = optionsDefault
 
 	for _, o := range opt {
@@ -48,7 +42,7 @@ func New(opt ...Option) *ImageAdapter {
 	return i
 }
 
-func (i *ImageAdapter) WithCloudinary(connectionURL string) *ImageAdapter {
+func (i *imageAdapter) WithCloudinary(connectionURL string) *imageAdapter {
 	// initiate cloudinary client
 	cld, err := cloudinary.NewFromURL(connectionURL)
 	if err != nil {
@@ -68,15 +62,15 @@ func (i *ImageAdapter) WithCloudinary(connectionURL string) *ImageAdapter {
 		i.main = "cloudinary"
 	}
 
-	i.cloudinary = CloudinaryProvider{
+	i.cloudinary = cloudinaryProvider{
 		cld:            cld,
-		AllowedFormats: i.opt.AllowedExtensions,
+		allowedFormats: i.opt.AllowedExtensions,
 	}
 
 	return i
 }
 
-func (i *ImageAdapter) Upload(bucketName, fileName, url string) (string, error) {
+func (i *imageAdapter) Upload(bucketName, fileName, url string) (string, error) {
 	f, err := i.makeFileName(fileName)
 	if err != nil {
 		return f, err
@@ -95,7 +89,7 @@ func (i *ImageAdapter) Upload(bucketName, fileName, url string) (string, error) 
 
 }
 
-func (i *ImageAdapter) Get(bucketName, fileName, transformation string) (string, error) {
+func (i *imageAdapter) Get(bucketName, fileName, transformation string) (string, error) {
 	if bucketName == "" {
 		return "", errors.New("bucket name is empty")
 	}
@@ -113,7 +107,7 @@ func (i *ImageAdapter) Get(bucketName, fileName, transformation string) (string,
 }
 
 // make standardized file name
-func (i *ImageAdapter) makeFileName(fileName string) (string, error) {
+func (i *imageAdapter) makeFileName(fileName string) (string, error) {
 	// TODO: do validating name
 	if fileName == "" {
 		return "", errors.New("file name is empty")
