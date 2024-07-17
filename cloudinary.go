@@ -16,26 +16,7 @@ type cloudinaryProvider struct {
 
 // Get implements Provider.
 func (c cloudinaryProvider) Get(bucket, fileName, transformation string) (string, error) {
-	f := bucket + "/" + fileName
-
-	image, err := c.cld.Image(f)
-	if err != nil {
-		return "", err
-	}
-	image.DeliveryType = "private"
-	image.Config.URL.Analytics = false
-	image.Config.URL.SignURL = true
-	if transformation != "" {
-		image.Config.URL.SignURL = false
-		image.Transformation = transformation
-	}
-
-	imageStr, err := image.String()
-	if err != nil {
-		return "", err
-	}
-
-	return imageStr, nil
+	return c.makeStringURL(bucket, fileName, transformation)
 }
 
 // Upload implements Provider.
@@ -59,13 +40,36 @@ func (c cloudinaryProvider) Upload(bucket, fileName, url string) (string, error)
 		AllowedFormats: c.allowedFormats,
 	})
 
-	if err != nil || uploadResult.Error.Message != "" {
-		if err != nil {
-			return fileName, err
-		} else {
-			return fileName, errors.New(uploadResult.Error.Message)
-		}
+	if err != nil {
+		return "", err
 	}
 
-	return fileName, nil
+	if uploadResult.Error.Message != "" {
+		return "", errors.New(uploadResult.Error.Message)
+	}
+
+	return c.makeStringURL(bucket, fileName, "")
+}
+
+func (c cloudinaryProvider) makeStringURL(bucket, fileName, transformation string) (string, error) {
+	f := bucket + "/" + fileName
+
+	image, err := c.cld.Image(f)
+	if err != nil {
+		return "", err
+	}
+	image.DeliveryType = "private"
+	image.Config.URL.Analytics = false
+	image.Config.URL.SignURL = true
+	if transformation != "" {
+		image.Config.URL.SignURL = false
+		image.Transformation = transformation
+	}
+
+	imageStr, err := image.String()
+	if err != nil {
+		return "", err
+	}
+
+	return imageStr, nil
 }
