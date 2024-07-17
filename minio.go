@@ -2,16 +2,16 @@ package image_adapter
 
 import "github.com/minio/minio-go/v7"
 
-type MinioProvider struct {
+type minioProvider struct {
 	minio *minio.Client
 }
 
 // Get implements Provider.
-func (m MinioProvider) Get(url string) string {
+func (m minioProvider) Get(url string) string {
 	return url
 }
 
 // Upload implements Provider.
-func (m MinioProvider) Upload(url string) (string, error) {
+func (m minioProvider) Upload(url string) (string, error) {
 	return url, nil
 }
