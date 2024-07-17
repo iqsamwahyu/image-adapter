@@ -13,7 +13,7 @@ type provider interface {
 	Upload(bucket, fileName, url string) (string, error)
 }
 
-type imageAdapter struct {
+type ImageAdapter struct {
 	opt        Option
 	main       string
 	cloudinary provider
@@ -31,8 +31,8 @@ var optionsDefault = Option{
 	// IsPublic:          false,
 }
 
-func New(opt ...Option) *imageAdapter {
-	i := new(imageAdapter)
+func New(opt ...Option) *ImageAdapter {
+	i := new(ImageAdapter)
 	i.opt = optionsDefault
 
 	for _, o := range opt {
@@ -42,7 +42,7 @@ func New(opt ...Option) *imageAdapter {
 	return i
 }
 
-func (i *imageAdapter) WithCloudinary(connectionURL string) *imageAdapter {
+func (i *ImageAdapter) WithCloudinary(connectionURL string) *ImageAdapter {
 	// initiate cloudinary client
 	cld, err := cloudinary.NewFromURL(connectionURL)
 	if err != nil {
@@ -70,7 +70,7 @@ func (i *imageAdapter) WithCloudinary(connectionURL string) *imageAdapter {
 	return i
 }
 
-func (i *imageAdapter) Upload(bucketName, fileName, url string) (string, error) {
+func (i *ImageAdapter) Upload(bucketName, fileName, url string) (string, error) {
 	f, err := i.makeFileName(fileName)
 	if err != nil {
 		return f, err
@@ -89,7 +89,7 @@ func (i *imageAdapter) Upload(bucketName, fileName, url string) (string, error) 
 
 }
 
-func (i *imageAdapter) Get(bucketName, fileName, transformation string) (string, error) {
+func (i *ImageAdapter) Get(bucketName, fileName, transformation string) (string, error) {
 	if bucketName == "" {
 		return "", errors.New("bucket name is empty")
 	}
@@ -107,7 +107,7 @@ func (i *imageAdapter) Get(bucketName, fileName, transformation string) (string,
 }
 
 // make standardized file name
-func (i *imageAdapter) makeFileName(fileName string) (string, error) {
+func (i *ImageAdapter) makeFileName(fileName string) (string, error) {
 	// TODO: do validating name
 	if fileName == "" {
 		return "", errors.New("file name is empty")
