@@ -9,7 +9,7 @@ import (
 )
 
 type Provider interface {
-	Get(bucket, fileName string) (string, error)
+	Get(bucket, fileName, transformation string) (string, error)
 	Upload(bucket, fileName, url string) (string, error)
 }
 
@@ -95,7 +95,7 @@ func (i *ImageAdapter) Upload(bucketName, fileName, url string) (string, error) 
 
 }
 
-func (i *ImageAdapter) Get(bucketName, fileName string) (string, error) {
+func (i *ImageAdapter) Get(bucketName, fileName, transformation string) (string, error) {
 	if bucketName == "" {
 		return "", errors.New("bucket name is empty")
 	}
@@ -106,7 +106,7 @@ func (i *ImageAdapter) Get(bucketName, fileName string) (string, error) {
 
 	switch i.main {
 	case "cloudinary":
-		return i.cloudinary.Get(bucketName, fileName)
+		return i.cloudinary.Get(bucketName, fileName, transformation)
 	default:
 		return "", errors.New("main adapter is not set")
 	}

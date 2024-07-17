@@ -214,8 +214,9 @@ func TestUploadOnCloudinary(t *testing.T) {
 
 func TestGetOnCloudinary(t *testing.T) {
 	type args struct {
-		bucketName string
-		fileName   string
+		bucketName     string
+		fileName       string
+		transformation string
 	}
 
 	type testCase struct {
@@ -228,50 +229,83 @@ func TestGetOnCloudinary(t *testing.T) {
 		{
 			name: "[1] get jpg from cloudinary",
 			args: args{
-				bucketName: "test-bucket",
-				fileName:   "test-file-1.jpg",
+				bucketName:     "test-bucket",
+				fileName:       "test-file-1.jpg",
+				transformation: "",
 			},
 			expectedError: false,
 		},
 		{
 			name: "[2] get jpg from cloudinary",
 			args: args{
-				bucketName: "test-bucket",
-				fileName:   "test-file-2.jpeg",
+				bucketName:     "test-bucket",
+				fileName:       "test-file-2.jpeg",
+				transformation: "",
 			},
 			expectedError: false,
 		},
 		{
 			name: "[3] get png from cloudinary",
 			args: args{
-				bucketName: "test-bucket",
-				fileName:   "test-file-3.png",
+				bucketName:     "test-bucket",
+				fileName:       "test-file-3.png",
+				transformation: "",
 			},
 			expectedError: false,
 		},
 		{
 			name: "[4] get broken image from cloudinary",
 			args: args{
-				bucketName: "test-bucket",
-				fileName:   "test-file-4.png",
+				bucketName:     "test-bucket",
+				fileName:       "test-file-4.png",
+				transformation: "",
 			},
 			expectedError: false,
 		},
 		{
 			name: "[5] get empty file name from cloudinary",
 			args: args{
-				bucketName: "test-bucket",
-				fileName:   "",
+				bucketName:     "test-bucket",
+				fileName:       "",
+				transformation: "",
 			},
 			expectedError: true,
 		},
 		{
 			name: "[6] get empty bucket name from cloudinary",
 			args: args{
-				bucketName: "",
-				fileName:   "test-file-5.png",
+				bucketName:     "",
+				fileName:       "test-file-5.png",
+				transformation: "",
 			},
 			expectedError: true,
+		},
+		{
+			name: "[7] get jpg from cloudinary with transformation",
+			args: args{
+				bucketName:     "test-bucket",
+				fileName:       "test-file-1.jpg",
+				transformation: "t_media_lib_thumb",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[8] get jpg from cloudinary with transformation",
+			args: args{
+				bucketName:     "test-bucket",
+				fileName:       "test-file-2.jpeg",
+				transformation: "t_media_lib_thumb",
+			},
+			expectedError: false,
+		},
+		{
+			name: "[9] get png from cloudinary with transformation",
+			args: args{
+				bucketName:     "test-bucket",
+				fileName:       "test-file-3.png",
+				transformation: "t_media_lib_thumb",
+			},
+			expectedError: false,
 		},
 	}
 
@@ -279,7 +313,7 @@ func TestGetOnCloudinary(t *testing.T) {
 	i.WithCloudinary(cloudinaryConnectionURL)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := i.Get(tt.args.bucketName, tt.args.fileName)
+			got, err := i.Get(tt.args.bucketName, tt.args.fileName, tt.args.transformation)
 			if err != nil && !tt.expectedError {
 				t.Errorf("Get() = %v, error: %v", got, err)
 			}
